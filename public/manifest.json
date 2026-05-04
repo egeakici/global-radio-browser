@@ -1,0 +1,20 @@
+{
+  "name": "Radio Browser",
+  "short_name": "Radio Browser",
+  "description": "World radio stations, built for driving",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#0a0a0f",
+  "background_color": "#0a0a0f",
+  "categories": ["music", "entertainment"],
+  "lang": "tr",
+  "icons": [
+    {
+      "src": "/radio.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
