@@ -7,9 +7,10 @@ import { COUNTRY_COORDS } from '../../shared/utils/countryCoords';
 import { StationPanel } from './components/StationPanel';
 import type { Country } from '../../core/types';
 
-const TILE_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
-const TILE_ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>';
+// CARTO basemaps now require an API key; Esri's dark canvas works without one
+const TILE_URL =
+  'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+const TILE_ATTRIBUTION = 'Tiles &copy; <a href="https://www.esri.com/">Esri</a> &mdash; Esri, HERE, Garmin, OpenStreetMap contributors';
 
 function markerRadius(stationCount: number): number {
   return Math.max(6, Math.log10(stationCount + 1) * 8);
@@ -43,8 +44,7 @@ export function MapMode() {
         <TileLayer
           url={TILE_URL}
           attribution={TILE_ATTRIBUTION}
-          subdomains="abcd"
-          maxZoom={19}
+          maxNativeZoom={16}
         />
 
         <ZoomControl position="bottomright" />
