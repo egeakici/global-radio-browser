@@ -27,5 +27,5 @@ export type AppMode = 'discovery' | 'map' | 'driving';
 export interface StationList {
   id: string;
   name: string;
-  stationuuids: string[];
+  stations: Station[];
 }

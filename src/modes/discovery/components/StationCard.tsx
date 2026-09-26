@@ -1,7 +1,9 @@
-import { Play, Pause, Heart, Wifi } from 'lucide-react';
+import { useCallback, useState } from 'react';
+import { Play, Pause, Heart, Wifi, ListPlus } from 'lucide-react';
 import { useStore } from '../../../core/store/useStore';
 import { StationFavicon } from '../../../shared/components/StationFavicon';
 import { LoadingSpinner } from '../../../shared/components/LoadingSpinner';
+import { AddToListMenu } from './AddToListMenu';
 import type { Station } from '../../../core/types';
 
 interface Props {
@@ -10,12 +12,15 @@ interface Props {
 }
 
 export function StationCard({ station, queue }: Props) {
-  const { player, playStation, pauseResume, toggleFavorite, isFavorite } = useStore();
+  const { player, playStation, pauseResume, toggleFavorite, isFavorite, lists } = useStore();
+  const [listAnchor, setListAnchor] = useState<HTMLElement | null>(null);
+  const closeListMenu = useCallback(() => setListAnchor(null), []);
 
   const isThisStation = player.currentStation?.stationuuid === station.stationuuid;
   const isPlaying = isThisStation && player.isPlaying;
   const isLoading = isThisStation && player.isLoading;
   const favorite = isFavorite(station.stationuuid);
+  const inAnyList = lists.some(l => l.stations.some(st => st.stationuuid === station.stationuuid));
 
   const handlePlay = () => {
     if (isThisStation) {
@@ -65,7 +70,21 @@ export function StationCard({ station, queue }: Props) {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className={`flex items-center gap-1 group-hover:opacity-100 transition-opacity ${listAnchor ? 'opacity-100' : 'opacity-0'}`}>
+        <button
+          onClick={e => {
+            e.stopPropagation();
+            const target = e.currentTarget;
+            setListAnchor(a => (a ? null : target));
+          }}
+          className={`p-1.5 rounded-full transition-all ${
+            inAnyList || listAnchor ? 'text-accent' : 'text-muted hover:text-accent'
+          }`}
+          aria-label="Add to list"
+          aria-expanded={!!listAnchor}
+        >
+          <ListPlus size={16} />
+        </button>
         <button
           onClick={e => {
             e.stopPropagation();
@@ -82,6 +101,8 @@ export function StationCard({ station, queue }: Props) {
           <Heart size={16} fill={favorite ? 'currentColor' : 'none'} />
         </button>
       </div>
+
+      {listAnchor && <AddToListMenu station={station} anchor={listAnchor} onClose={closeListMenu} />}
 
       <button
         className={`w-9 h-9 rounded-full flex items-center justify-center transition-all flex-shrink-0 text-white`}

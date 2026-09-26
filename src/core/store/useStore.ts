@@ -45,10 +45,9 @@ interface Store {
 
   // Custom lists (persisted)
   lists: StationList[];
-  createList: (name: string) => void;
+  createList: (name: string) => string;
   deleteList: (id: string) => void;
-  addToList: (listId: string, stationuuid: string) => void;
-  removeFromList: (listId: string, stationuuid: string) => void;
+  toggleInList: (listId: string, station: Station) => void;
 
   // Discovery UI state (not persisted)
   selectedCountryCode: string | null;
@@ -160,23 +159,22 @@ export const useStore = create<Store>()(
       lists: [],
       createList: (name) => {
         const id = `list-${Date.now()}`;
-        set(s => ({ lists: [...s.lists, { id, name, stationuuids: [] }] }));
+        set(s => ({ lists: [...s.lists, { id, name, stations: [] }] }));
+        return id;
       },
       deleteList: (id) => set(s => ({ lists: s.lists.filter(l => l.id !== id) })),
-      addToList: (listId, stationuuid) => {
+      toggleInList: (listId, station) => {
         set(s => ({
-          lists: s.lists.map(l =>
-            l.id === listId && !l.stationuuids.includes(stationuuid)
-              ? { ...l, stationuuids: [...l.stationuuids, stationuuid] }
-              : l,
-          ),
-        }));
-      },
-      removeFromList: (listId, stationuuid) => {
-        set(s => ({
-          lists: s.lists.map(l =>
-            l.id === listId ? { ...l, stationuuids: l.stationuuids.filter(id => id !== stationuuid) } : l,
-          ),
+          lists: s.lists.map(l => {
+            if (l.id !== listId) return l;
+            const exists = l.stations.some(st => st.stationuuid === station.stationuuid);
+            return {
+              ...l,
+              stations: exists
+                ? l.stations.filter(st => st.stationuuid !== station.stationuuid)
+                : [...l.stations, station],
+            };
+          }),
         }));
       },
 
@@ -194,9 +192,17 @@ export const useStore = create<Store>()(
         setItem: (name, value) => localStorage.setItem(name, value),
         removeItem: (name) => localStorage.removeItem(name),
       })),
+      version: 1,
       partialize: (s) => ({
         lists: s.lists,
       }),
+      // v0 lists stored only station ids; full stations are needed to render a list
+      migrate: (persisted) => {
+        const state = persisted as { lists?: Array<{ id: string; name: string; stations?: Station[] }> } | null;
+        return {
+          lists: (state?.lists ?? []).map(l => ({ id: l.id, name: l.name, stations: l.stations ?? [] })),
+        };
+      },
     },
   ),
 );
