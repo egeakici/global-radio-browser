@@ -48,6 +48,3 @@ desktop.ini
 *.local
 *.tmp
 *.temp
-
-# Local scripts
-start.bat
