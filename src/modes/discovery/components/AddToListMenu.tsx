@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Check, Plus } from 'lucide-react';
+import { Check, Plus, X } from 'lucide-react';
 import { useStore } from '../../../core/store/useStore';
 import type { Station } from '../../../core/types';
 
@@ -61,7 +61,16 @@ export function AddToListMenu({ station, anchor, onClose }: Props) {
       className="fixed z-50 bg-surface-card border border-surface-border rounded-xl shadow-2xl overflow-hidden"
       style={{ ...position, width: MENU_WIDTH }}
     >
-      <p className="px-3 pt-3 pb-2 text-xs font-semibold text-muted uppercase tracking-wide">Add to list</p>
+      <div className="flex items-center justify-between pl-3 pr-1.5 pt-1.5 pb-1">
+        <p className="text-xs font-semibold text-muted uppercase tracking-wide">Add to list</p>
+        <button
+          onClick={onClose}
+          className="p-1.5 rounded-lg text-muted hover:text-white hover:bg-surface-hover transition-colors"
+          aria-label="Close"
+        >
+          <X size={14} />
+        </button>
+      </div>
 
       {lists.length > 0 && (
         <div className="max-h-56 overflow-y-auto">
