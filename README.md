@@ -1,84 +1,82 @@
 # Global Radio Browser
 
-Global Radio Browser is an open-source project that you can clone, run locally, and use as a polished frontend for discovering and listening to live radio stations from around the world. It requires no sign-up, no subscription, and no hosted service.
+**Discover and listen to live radio stations from around the world — directly in your browser.**
+
+**Live application:** [global-radio-browser.pages.dev](https://global-radio-browser.pages.dev/)
+
+Global Radio Browser is an open-source web application for exploring thousands of live radio stations worldwide. Search by station or country, discover broadcasts on an interactive map, and switch to a distraction-reduced listening interface. No account or subscription is required.
 
 ## Project Goal
 
-Global Radio Browser aims to make worldwide live radio feel immediate, accessible, and enjoyable. The project brings together thousands of stations from across the globe and presents them through a focused interface built for everyday listening, geographic exploration, and safe in-car control.
+Global Radio Browser aims to make worldwide live radio immediate, accessible, and enjoyable. It brings together stations from across the globe in a focused interface designed for everyday listening, geographic exploration, and convenient controls on desktop and mobile devices.
 
-Rather than reducing radio discovery to a single search field, Global Radio Browser is designed around three complementary frontend layers:
+The experience is organized around three complementary modes:
 
-- **Search Mode** for fast station discovery by name, country, genre, tag, or favorites.
-- **Map Mode** for exploring radio stations geographically through an interactive world map.
-- **Car Mode** for distraction-reduced listening with large controls, swipe navigation, persistent playback, and car media controls.
+- **Search Mode** — Discover stations by name, country, genre, tag, or favorites.
+- **Map Mode** — Explore stations geographically through an interactive world map.
+- **Car Mode** — Use large playback controls, swipe navigation, and supported device media controls.
 
-Together, these modes create a frontend architecture that balances usability, context, and functionality across desktop, mobile, and in-car scenarios.
+These modes share a centralized playback engine so users can switch between views without interrupting the active stream.
 
 ## Key Features
 
 ### Worldwide Live Radio
 
-- Browse live stations from the open Radio Browser catalogue.
-- Load popular stations by default for quick discovery.
-- Search by station name with fast, focused results.
-- Filter stations by country and popular tags such as pop, rock, jazz, classical, electronic, news, talk, dance, metal, and more.
-- Automatically hide broken stations through Radio Browser API filters.
+- Browse stations from the open [Radio Browser](https://www.radio-browser.info/) directory.
+- Discover popular stations immediately.
+- Search by station name and filter by country or genre.
+- Browse tags such as pop, rock, jazz, classical, electronic, news, talk, dance, and more.
+- Filter out stations marked as broken by the Radio Browser API.
 
-### Three-Layer Frontend Architecture
+### Search Mode
 
-The interface is organized into three user-facing layers:
+- Search stations by name, country, and genre/tag.
+- Save and revisit favorite stations.
+- Build and manage station lists.
+- Start playback directly from a station card.
 
-1. **Discovery Layer**
-   - Search stations by name.
-   - Filter by country.
-   - Browse by genre/tag.
-   - Save and reopen favorite stations.
-   - Start playback from any station card.
+### Map Mode
 
-2. **Map Layer**
-   - Explore countries on an interactive Leaflet map.
-   - View station density using proportional country markers.
-   - Open a country panel and browse available stations.
-   - Add a country's station list to the playback queue.
+- Explore countries on an interactive Leaflet map.
+- View station density through proportional country markers.
+- Open a country panel to browse available stations.
+- Add stations from a country to the playback queue.
 
-3. **Driving Layer**
-   - Full-screen listening interface optimized for cars.
-   - Large play, pause, previous, and next controls.
-   - Swipe left or right to change stations.
-   - Screen Wake Lock support where available.
-   - MediaSession integration for Bluetooth devices, steering wheel controls, and lock-screen media controls.
+### Car Mode
+
+- Full-screen, distraction-reduced listening interface.
+- Large play, pause, previous, and next controls.
+- Swipe left or right to change stations.
+- Screen Wake Lock support where available.
+- Media Session integration for supported Bluetooth, lock-screen, and vehicle media controls.
 
 ### Playback Experience
 
-- Centralized audio engine that keeps playback alive while switching modes.
-- Standard audio stream support through the browser audio element.
-- HLS and `.m3u8` stream support through `hls.js`.
-- Loading, paused, playing, error, and ended states synchronized with the global app store.
-- Volume persistence through local storage.
-- Queue navigation for station lists and driving mode.
+- Centralized audio engine that preserves playback between modes.
+- Standard browser audio streams and HLS (`.m3u8`) playback through `hls.js`.
+- Playback status synchronization across the interface.
+- Persistent volume settings and queue navigation.
 
-### Favorites And Local Persistence
+### Favorites and Preferences
 
-- Save favorite stations locally.
-- Reopen favorite stations from the Discovery interface.
-- Persist user-created station lists in the app store.
-- Keep volume preferences between sessions.
+- Save favorite stations and custom lists in browser storage.
+- Preserve preferences between sessions on the same browser and device.
+- Use the application without creating an account.
 
 ### Reliability
 
-- Uses multiple Radio Browser API mirrors:
+- Multiple Radio Browser API mirrors:
   - `de1.api.radio-browser.info`
   - `nl1.api.radio-browser.info`
   - `at1.api.radio-browser.info`
-- Automatically falls back to the next mirror when one endpoint is unavailable.
-- Registers station clicks back to Radio Browser for community statistics.
+- Automatic fallback when an API mirror is unavailable.
+- Station click registration for Radio Browser community statistics.
 
 ### Progressive Web App
 
-- Installable PWA configuration through `vite-plugin-pwa`.
-- Auto-updating service worker.
-- App manifest with standalone display mode.
-- Static asset caching through Workbox.
+- PWA configuration via `vite-plugin-pwa`.
+- Standalone display mode for supported installations.
+- Service worker updates and static asset caching through Workbox.
 
 ## Tech Stack
 
@@ -89,6 +87,7 @@ The interface is organized into three user-facing layers:
 - **Map:** Leaflet, React Leaflet
 - **PWA:** Vite PWA Plugin, Workbox
 - **Icons:** Lucide React
+- **Deployment:** Cloudflare Pages
 
 ## Architecture Overview
 
@@ -97,7 +96,7 @@ src/
   core/
     api/          Radio Browser API client and mirror fallback
     audio/        Shared audio engine
-    storage/      Local storage helpers
+    storage/      Browser storage helpers
     store/        Zustand app store
     types/        Shared TypeScript types
 
@@ -112,69 +111,37 @@ src/
     utils/        Country flags and country coordinates
 ```
 
-The app keeps audio and playback state in the shared core layer, while each frontend mode focuses on a specific user context. This makes it possible to switch between search, map exploration, and driving controls without losing the active stream.
+The application uses a shared core for audio playback, API access, state, and browser persistence. The three interface modes remain separate while using the same playback state and queue.
 
-## Getting Started
+## Live Deployment
 
-### Requirements
+**Production URL:** https://global-radio-browser.pages.dev/
 
-- Node.js 18 or newer
-- npm
-
-### Installation
-
-```bash
-git clone https://github.com/egeakici/global-radio-browser.git
-cd global-radio-browser
-npm install
-```
-
-### Development
-
-```bash
-npm run dev
-```
-
-The Vite dev server is configured to run at:
-
-```text
-http://127.0.0.1:5500
-```
-
-### Production Build
-
-```bash
-npm run build
-```
-
-### Preview Production Build
-
-```bash
-npm run preview
-```
+The application is hosted on **Cloudflare Pages**, with production builds deployed automatically from the GitHub repository's `main` branch. The browser fetches station metadata from Radio Browser and connects to the individual radio streams. No application-specific backend or user account is required for the current release.
 
 ## Data Source
 
 Station and country data comes from [Radio Browser](https://www.radio-browser.info/), a free, open, community-driven radio station directory.
 
-This project does not require a private API key. Availability and stream quality depend on the public directory data and the individual radio station streams.
+The project does not require a private API key. Station availability and stream quality depend on public directory data and the individual broadcasters. Radio streams and station branding remain the responsibility of their respective providers.
 
 ## Browser Support Notes
 
-- Audio playback depends on browser autoplay policies. In most browsers, the user must start playback with an interaction.
-- HLS support varies by browser; `hls.js` is used where native support is not enough.
-- Wake Lock and MediaSession features are progressive enhancements and may not be available in every browser or operating system.
-- Bluetooth and steering wheel controls depend on browser, device, and vehicle media integration support.
+- Audio playback follows browser autoplay policies; users may need to interact with the page to start listening.
+- HLS support differs between browsers; `hls.js` is used where appropriate.
+- Wake Lock and Media Session features depend on browser and operating-system support.
+- Bluetooth, lock-screen, and steering-wheel controls depend on the device and its media integration.
+- Some third-party radio streams may be unavailable or incompatible with secure browser playback.
 
-## Roadmap Ideas
+## Roadmap
 
-- Station history and recently played stations.
-- Import/export favorites.
-- More advanced filters for language, codec, bitrate, and popularity.
-- Better offline shell behavior for installed PWA usage.
+- Listening history and recently played stations.
+- Import and export of favorites.
+- More filters for language, codec, bitrate, and popularity.
+- Better offline app-shell behavior for PWA installations.
 - Optional station health indicators.
-- Responsive refinements for tablets and dashboard-mounted screens.
+- Responsive improvements for tablets and dashboard-mounted screens.
 
 ## License
 
-MIT
+This project is licensed under the [MIT License](LICENSE).
