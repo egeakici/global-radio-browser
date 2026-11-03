@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Play, Pause, SkipBack, SkipForward, X, Heart, Wifi, WifiOff } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, X, Heart, Wifi } from 'lucide-react';
 import { useStore } from '../../core/store/useStore';
 import { useSwipe } from '../../shared/hooks/useSwipe';
 import { StationFavicon } from '../../shared/components/StationFavicon';
@@ -25,7 +25,7 @@ export function DrivingMode() {
   useEffect(() => {
     let wakeLock: WakeLockSentinel | null = null;
     if ('wakeLock' in navigator) {
-      (navigator as Navigator & { wakeLock: WakeLockManager }).wakeLock
+      navigator.wakeLock
         .request('screen')
         .then(lock => { wakeLock = lock; })
         .catch(() => null);
